@@ -4,23 +4,26 @@ function computerChoice() {
   return computerChoice;
 }
 
-function playRound(computerSelection, playerSelection) {
-  playerSelection = prompt("Rock, Paper or Scissors", "");
-  playerSelection = playerSelection.toLowerCase();
+function playerChoice() {
+  let playerChoice = prompt("Rock, Paper or Scissors", "");
+  playerChoice = playerChoice.toLowerCase();
   while (true) {
     if (
-      playerSelection !== "rock" &&
-      playerSelection !== "paper" &&
-      playerSelection !== "scissors"
+      playerChoice !== "rock" &&
+      playerChoice !== "paper" &&
+      playerChoice !== "scissors"
     ) {
-      playerSelection = prompt(
+      playerChoice = prompt(
         "Please choose and type only Rock, Paper or Scissors"
       );
-      playerSelection = playerSelection.toLowerCase();
+      playerChoice = playerChoice.toLowerCase();
     } else {
-      break;
+      return playerChoice;
     }
   }
+}
+
+function playRound(computerSelection, playerSelection) {
   console.log(
     `The computer chooses ${computerSelection} and the player chooses ${playerSelection}`
   );
@@ -61,7 +64,7 @@ let roundResult;
 function game() {
   for (let i = 1; i <= 5; i++) {
     console.log(`Game #${i}`);
-    roundResult = playRound(computerChoice());
+    roundResult = playRound(computerChoice(), playerChoice());
     if (roundResult === "The Computer WINS this Round!!!") {
       ++computerCounter;
       console.log(roundResult);
