@@ -56,13 +56,12 @@ function playRound(computerSelection, playerSelection) {
 
 let computerCounter = 0;
 let playerCounter = 0;
-let playerChoice;
 let roundResult;
 
 function game() {
   for (let i = 1; i <= 5; i++) {
     console.log(`Game #${i}`);
-    roundResult = playRound(computerChoice(), playerChoice);
+    roundResult = playRound(computerChoice());
     if (roundResult === "The Computer WINS this Round!!!") {
       ++computerCounter;
       console.log(roundResult);
