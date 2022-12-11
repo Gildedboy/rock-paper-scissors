@@ -61,6 +61,8 @@ let computerCounter = 0;
 let playerCounter = 0;
 let roundResult;
 
+console.log(`GAME START`);
+
 function game() {
   for (let i = 1; i <= 5; i++) {
     console.log(`Game #${i}`);
