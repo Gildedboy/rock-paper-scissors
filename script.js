@@ -1,100 +1,124 @@
+//function that returns a computer choice between rock, paper and scissors
 function computerChoice() {
   let choices = ["rock", "paper", "scissors"];
   let computerChoice = choices[Math.floor(Math.random() * choices.length)];
   return computerChoice;
 }
 
-function playerChoice() {
-  let playerChoice = prompt("Rock, Paper or Scissors", "");
-  playerChoice = playerChoice.toLowerCase();
-  while (true) {
-    if (
-      playerChoice !== "rock" &&
-      playerChoice !== "paper" &&
-      playerChoice !== "scissors"
-    ) {
-      playerChoice = prompt(
-        "Please choose and type only Rock, Paper or Scissors"
-      );
-      playerChoice = playerChoice.toLowerCase();
-    } else {
-      return playerChoice;
-    }
-  }
+//creation of consts variables for each button already created in the DOM, they will select each button by their id
+const rock = document.querySelector("#rock");
+const paper = document.querySelector("#paper");
+const scissors = document.querySelector("#scissors");
+
+//each playerChoice const have his own addEventListener that triggers the playRound function, this playRound uses computerChoice and a hardcode word for each player Selection based on the button
+rock.addEventListener("click", function () {
+  return playRound(computerChoice(), "rock");
+});
+
+paper.addEventListener("click", function () {
+  return playRound(computerChoice(), "paper");
+});
+
+scissors.addEventListener("click", function () {
+  return playRound(computerChoice(), "scissors");
+});
+
+//creation of consts variables for each div already created in the DOM
+const content = document.querySelector(".content");
+const buttons = document.querySelector(".buttons");
+const scores = document.querySelector(".scores");
+
+//creation of divs using javascript and assigned to their own const variable
+const fight = document.createElement("div");
+fight.classList.add(".fight");
+const result = document.createElement("div");
+result.classList.add(".result");
+
+//appending fight and result divs into the content div using the scores referenceNode
+content.insertBefore(fight, scores);
+content.insertBefore(result, scores);
+
+//creation of const variables for player and computer scores and assignment that will be used in the playRound
+const playerScore = document.querySelector("#playerScore");
+const computerScore = document.querySelector("#computerScore");
+let playerNumber = (playerScore.textContent = 0);
+let computerNumber = (computerScore.textContent = 0);
+
+//creation of const winner div and reset button that will appear when player number reaches 5
+const winner = document.createElement("div");
+winner.classList.add(".winner");
+const resetButton = document.createElement("button");
+resetButton.classList.add("resetButton");
+resetButton.textContent = "RESET GAME";
+
+//RESET BUTTON LISTENER
+resetButton.addEventListener("click", reset);
+
+//reset function logic
+function reset() {
+  rock.classList.remove("noClick");
+  paper.classList.remove("noClick");
+  scissors.classList.remove("noClick");
+  playerNumber = playerScore.textContent = 0;
+  computerNumber = computerScore.textContent = 0;
+  fight.textContent = "";
+  result.textContent = "";
+  content.removeChild(winner);
+  content.removeChild(resetButton);
 }
 
+//function that have all the game logic and also check if the player or the computer gets to 5, displays the winner and the reset button
 function playRound(computerSelection, playerSelection) {
-  console.log(
-    `The computer chooses ${computerSelection} and the player chooses ${playerSelection}`
-  );
-  let winner;
-  if (computerSelection === "rock" && playerSelection === "rock") {
-    winner = "nobody";
-  } else if (computerSelection === "rock" && playerSelection === "paper") {
-    winner = "player";
+  fight.textContent = `The player chooses ${playerSelection.toUpperCase()} and the computer chooses ${computerSelection.toUpperCase()}`;
+
+  let roundWinner;
+
+  if (computerSelection === "rock" && playerSelection === "paper") {
+    roundWinner = "player";
   } else if (computerSelection === "rock" && playerSelection === "scissors") {
-    winner = "computer";
+    roundWinner = "computer";
   } else if (computerSelection === "paper" && playerSelection === "rock") {
-    winner = "computer";
-  } else if (computerSelection === "paper" && playerSelection === "paper") {
-    winner = "nobody";
+    roundWinner = "computer";
   } else if (computerSelection === "paper" && playerSelection === "scissors") {
-    winner = "player";
+    roundWinner = "player";
   } else if (computerSelection === "scissors" && playerSelection === "rock") {
-    winner = "player";
+    roundWinner = "player";
   } else if (computerSelection === "scissors" && playerSelection === "paper") {
-    winner = "computer";
+    roundWinner = "computer";
   } else {
-    winner = "nobody";
+    roundWinner = "nobody";
   }
-  switch (winner) {
+
+  switch (roundWinner) {
     case "computer":
-      return "The Computer WINS this Round!!!";
+      computerScore.textContent = ++computerNumber;
+      result.textContent = `THE COMPUTER WINS THIS ROUND; ${computerSelection.toUpperCase()} beats ${playerSelection.toUpperCase()} !!!`;
+      break;
     case "player":
-      return "The Player WINS this Round!!!";
+      playerScore.textContent = ++playerNumber;
+      result.textContent = ` THE PLAYER WINS THIS ROUND; ${playerSelection.toUpperCase()} beats ${computerSelection.toUpperCase()} !!!`;
+      break;
     case "nobody":
-      return "It's a tie";
+      result.textContent = "IT'S A TIE";
+      break;
   }
-}
 
-let computerCounter = 0;
-let playerCounter = 0;
-let roundResult;
-
-console.log(`GAME START`);
-
-function game() {
-  for (let i = 1; i <= 5; i++) {
-    console.log(`Game #${i}`);
-    roundResult = playRound(computerChoice(), playerChoice());
-    if (roundResult === "The Computer WINS this Round!!!") {
-      ++computerCounter;
-      console.log(roundResult);
-      console.log(`Computer: ${computerCounter} vs. Player: ${playerCounter}`);
-      if (computerCounter === 3) {
-        return "Computer WINS THE GAME";
-      } else {
-      }
-    } else if (roundResult === "The Player WINS this Round!!!") {
-      ++playerCounter;
-      console.log(roundResult);
-      console.log(`Computer: ${computerCounter} vs. Player: ${playerCounter}`);
-      if (playerCounter === 3) {
-        return "Player WINS THE GAME";
-      } else {
-      }
-    } else if (roundResult === "It's a tie") {
-      console.log(roundResult);
-      console.log(`Computer: ${computerCounter} vs. Player: ${playerCounter}`);
-    } else {
-    }
-  }
-  if (computerCounter > playerCounter) {
-    return "Computer WINS THE GAME";
-  } else if (playerCounter > computerCounter) {
-    return "Player WINS THE GAME";
+  //GAME WINNER LOGIC
+  if (playerNumber === 5) {
+    rock.classList.add("noClick");
+    paper.classList.add("noClick");
+    scissors.classList.add("noClick");
+    content.appendChild(winner);
+    content.appendChild(resetButton);
+    return (winner.textContent = "PLAYER WINS THE GAME!!!");
+  } else if (computerNumber === 5) {
+    rock.classList.add("noClick");
+    paper.classList.add("noClick");
+    scissors.classList.add("noClick");
+    content.appendChild(winner);
+    content.appendChild(resetButton);
+    return (winner.textContent = "COMPUTER WINS THE GAME!!!");
   } else {
-    return "At the end of the 5 games, no one was ahead in victories, so it was a TIE GAME";
+    return;
   }
 }
-console.log(game());
